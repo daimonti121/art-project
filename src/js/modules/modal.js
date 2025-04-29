@@ -1,11 +1,17 @@
-const modals = (modalState) => {
-    function bindModal(triggerSelector, modalSelector, closeSelector, closeClickOverlay = true) {
+const modals = () => {
+    let btnPressed = false;
+    
+    function bindModal(triggerSelector, modalSelector, closeSelector, destroy = false) {
         const trigger = document.querySelectorAll(triggerSelector),
             modal = document.querySelector(modalSelector),
             close = document.querySelector(closeSelector),
             windows = document.querySelectorAll('[data-modal]'),
-            scroll = calcScroll(),
-            windowIsOpen = 0;
+            scroll = calcScroll();
+
+        // if(localStorage.getItem('gift')) {
+        //     document.querySelector('.fixed-gift').style.display = 'none';
+        // }
+
 
         trigger.forEach(item => {
             item.addEventListener('click', (e) => {
@@ -13,8 +19,16 @@ const modals = (modalState) => {
                     e.preventDefault();
                 }
 
+                if(destroy) {
+                    item.remove();
+                    localStorage.setItem('gift', true);
+                }
+
+                btnPressed = true;
+
                 windows.forEach(item => {
                     item.style.display = 'none';
+                    item.classList.add('animated', 'fadeIn');
                 })
 
                 modal.style.display = "block";
@@ -35,7 +49,7 @@ const modals = (modalState) => {
         });
 
         modal.addEventListener('click', (e) => {
-            if (e.target === modal && closeClickOverlay) {
+            if (e.target === modal) {
 
                 windows.forEach(item => {
                     item.style.display = 'none';
@@ -49,19 +63,22 @@ const modals = (modalState) => {
     }
 
     function showModalByTime(selector, time) {
-        setTimeout(function () {
+        setTimeout(function() {
             let display;
 
             document.querySelectorAll('[data-modal]').forEach(item => {
                 if (getComputedStyle(item).display !== 'none') {
-                    display = 'block';
+                    display = "block";
                 }
+            });
 
-                if (!display) {
-                    document.querySelector(selector).style.display = 'block';
-                    document.body.style.overflow = "hidden";
-                }
-            })
+            if (!display) {
+                document.querySelector(selector).style.display = 'block';
+                document.body.style.overflow = "hidden";
+                let scroll = calcScroll();
+                document.body.style.marginRight = `${scroll}px`;
+
+            }
         }, time);
     }
 
@@ -80,9 +97,21 @@ const modals = (modalState) => {
         return scrollWidth;
     }
 
+    function openByScroll(selector) {
+        window.addEventListener('scroll', () => {
+            let scrollHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+
+            if(!btnPressed && (window.pageYOffset + document.documentElement.clientHeight >= scrollHeight)){
+                document.querySelector(selector).click();
+            }
+        })
+    }
+
     bindModal('.button-design', '.popup-design', '.popup-design .popup-close');
-    bindModal('.button-consultation', '.popup-consultation', '.popup-consultation .popup-close')
-    showModalByTime('.popup-consultation', 60000);
+    bindModal('.button-consultation', '.popup-consultation', '.popup-consultation .popup-close');
+    bindModal('.fixed-gift', '.popup-gift', '.popup-gift .popup-close', true)
+    openByScroll('.fixed-gift')
+    // showModalByTime('.popup-consultation', 3000);
 };
 
 export default modals;
