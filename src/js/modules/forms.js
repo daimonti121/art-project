@@ -1,5 +1,3 @@
-import checkNumInputs from "./CheckNumInputs";
-
 const forms = (state) => {
     const form = document.querySelectorAll('form');
     const input = document.querySelectorAll('input');
@@ -59,22 +57,21 @@ const forms = (state) => {
             statusMessage.appendChild(statusImg);
 
             const formData = new FormData(item);
-
-            if (item.getAttribute('data-calc') === "end") {
-                for (let key in state) {
-                    formData.append(key, state[key]);
-                }
-            }
+            let api;
+            item.closest('.popup-design') ? api = path.designer : api = path.question;
+            console.log(api);
 
             state = {};
 
-            postData('assets/server.php', formData)
+            postData(api, formData)
                 .then(res => {
                     console.log(res);
-                    statusMessage.textContent = message.success;
+                    statusImg.setAttribute('src', message.ok);
+                    textMessage.textContent = message.success;
                 })
                 .catch(() => {
-                    statusMessage.textContent = message.failure;
+                    statusImg.setAttribute('src', message.fail);
+                    textMessage.textContent = message.failure;
                 })
                 .finally(() => {
                     clearInputs();
