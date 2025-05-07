@@ -1,6 +1,7 @@
 const forms = (state) => {
     const form = document.querySelectorAll('form');
     const input = document.querySelectorAll('input');
+    const upload = document.querySelectorAll('[name="upload"]')
 
     // checkNumInputs('input[name="user_phone"]');
 
@@ -32,7 +33,20 @@ const forms = (state) => {
         input.forEach(item => {
             item.value = '';
         })
+        upload.forEach(item => {
+            item.previousElementSibling.textContent = 'Файл не выбран';
+        })
     }
+
+    upload.forEach(item => {
+        item.addEventListener('input', () => {
+            let dots;
+            const arr = item.files[0].name.split('.');
+            arr.length > 5 ? dots = '...' : dots = '.';
+            const name = arr[0].substring(0, 6) + dots + arr[1];
+            item.previousElementSibling.textContent = name;
+        })
+    })
 
     form.forEach(item => {
         item.addEventListener('submit', (e) => {
@@ -46,7 +60,7 @@ const forms = (state) => {
             textMessage.textContent = message.loading;
             statusMessage.appendChild(textMessage);
 
-            item.classList.add('animated', 'fadeOut');
+            item.classList.add('animated', 'fadeOutUp');
             setTimeout(() => {
                 item.style.display = 'none';
             }, 400)
@@ -58,7 +72,7 @@ const forms = (state) => {
 
             const formData = new FormData(item);
             let api;
-            item.closest('.popup-design') ? api = path.designer : api = path.question;
+            item.closest('.popup-design') || item.classList.contains('calc_form') ? api = path.designer : api = path.question;
             console.log(api);
 
             state = {};
@@ -77,6 +91,9 @@ const forms = (state) => {
                     clearInputs();
                     setTimeout(() => {
                         statusMessage.remove();
+                        item.style.display = 'block';
+                        item.classList.remove('fadeOutUp');
+                        item.classList.add('fadeInUp');
                     }, 5000);
                 })
         })
