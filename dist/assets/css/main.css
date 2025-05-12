@@ -235,6 +235,9 @@ h4 {
   /* example */
 
 }
+.status {
+  text-align: center;
+}
 .main .file_upload input[type=file] {
   position: absolute;
   left: 0;
