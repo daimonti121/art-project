@@ -63,9 +63,17 @@ const forms = (state) => {
             statusMessage.appendChild(statusImg);
 
             const formData = new FormData(item);
+
+            if (item.getAttribute('data-calc') === "end") {
+                for (let key in state) {
+                    formData.append(key, state[key]);
+                }
+            }
+
             let api;
             item.closest('.popup-design') || item.classList.contains('calc_form') ? api = path.designer : api = path.question;
             console.log(api);
+
 
             state = {};
 

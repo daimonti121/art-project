@@ -12,27 +12,78 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-const calc = (size, material, options, promocode, result) => {
+const calc = (size, material, options, promocode, result, state) => {
   const sizeBlock = document.querySelector(size);
   const materialBlock = document.querySelector(material);
   const optionsBlock = document.querySelector(options);
   const promocodeBlock = document.querySelector(promocode);
   const resultBlock = document.querySelector(result);
   let sum = 0;
-  const calcFunc = () => {
+  const calcFunc = prop => {
     sum = Math.round(+sizeBlock.value * +materialBlock.value + +optionsBlock.value);
+    let clientOrder = '';
     if (sizeBlock.value == '' || materialBlock.value == '') {
       resultBlock.textContent = 'Пожалуйста, выберете размер и материал картины';
     } else if (promocodeBlock.value === 'IWANTPOPART') {
       resultBlock.textContent = Math.round(sum * 0.7);
     } else {
       resultBlock.textContent = sum;
+      if (sizeBlock) {
+        switch (sizeBlock.value) {
+          case '500':
+            clientOrder += `Размер материала: 40х50. `;
+            break;
+          case '1000':
+            clientOrder += `Размер материала: 50х70. `;
+            break;
+          case '1500':
+            clientOrder += `Размер материала: 70х70. `;
+            break;
+          case '2000':
+            clientOrder += `Размер материала: 70х100. `;
+            break;
+        }
+      }
+      if (materialBlock) {
+        switch (materialBlock.value) {
+          case '1':
+            clientOrder += `Тип материала: холст из волокна. `;
+            break;
+          case '1.2':
+            clientOrder += `Тип материала: льняной холст. `;
+            break;
+          case '1.5':
+            clientOrder += `Тип материала: холст из натурального хлопка. `;
+            break;
+        }
+      }
+      if (optionsBlock) {
+        switch (optionsBlock.value) {
+          case '1000':
+            clientOrder += `Дополнительные услуги: покрытие арт-гелем. `;
+            break;
+          case '2000':
+            clientOrder += `Дополнительные услуги: экспресс-изготовление. `;
+            break;
+          case '500':
+            clientOrder += `Дополнительные услуги: доставка готовых работ. `;
+            break;
+        }
+      }
+      clientOrder += `Общая стоимость услуг: ${sum} рублей.`;
+      state[prop] = clientOrder;
     }
   };
-  sizeBlock.addEventListener('change', calcFunc);
-  materialBlock.addEventListener('change', calcFunc);
-  optionsBlock.addEventListener('change', calcFunc);
-  promocodeBlock.addEventListener('input', calcFunc);
+
+  //     sizeBlock.addEventListener('change', calcFunc);
+  //     materialBlock.addEventListener('change', calcFunc);
+  //     optionsBlock.addEventListener('change', calcFunc);
+  //     promocodeBlock.addEventListener('input', calcFunc);
+
+  sizeBlock.addEventListener('change', () => calcFunc('order'));
+  materialBlock.addEventListener('change', () => calcFunc('order'));
+  optionsBlock.addEventListener('change', () => calcFunc('order'));
+  promocodeBlock.addEventListener('input', () => calcFunc('order'));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (calc);
 
@@ -167,7 +218,7 @@ const forms = state => {
     fail: 'assets/img/fail.png'
   };
   const path = {
-    designer: 'assets/server.php',
+    // designer: 'assets/server.php',
     question: 'assets/question.php'
   };
   const clearInputs = () => {
@@ -205,12 +256,19 @@ const forms = state => {
       statusImg.classList.add('animated', 'fadeInUp');
       statusMessage.appendChild(statusImg);
       const formData = new FormData(item);
-      let api;
-      item.closest('.popup-design') || item.classList.contains('calc_form') ? api = path.designer : api = path.question;
-      console.log(api);
+
+      // let api;
+      // item.closest('.popup-design') || item.classList.contains('calc_form') ? api = path.designer : api = path.question;
+      // console.log(api);
+
+      if (item.getAttribute('data-calc') === "end") {
+        for (let key in state) {
+          formData.append(key, state[key]);
+        }
+      }
       state = {};
-      (0,_services_requests__WEBPACK_IMPORTED_MODULE_0__.postData)(api, formData).then(res => {
-        console.log(res);
+      (0,_services_requests__WEBPACK_IMPORTED_MODULE_0__.postData)('assets/question.php', formData).then(res => {
+        // console.log(res);
         statusImg.setAttribute('src', message.ok);
         textMessage.textContent = message.success;
       }).catch(() => {
@@ -631,15 +689,16 @@ __webpack_require__.r(__webpack_exports__);
 document.addEventListener('DOMContentLoaded', () => {
   "use strict";
 
+  let modalState = {};
+  (0,_modules_calc__WEBPACK_IMPORTED_MODULE_6__["default"])('#size', '#material', '#options', '.promocode', '.calc-price', modalState);
   (0,_modules_modal__WEBPACK_IMPORTED_MODULE_0__["default"])();
   (0,_modules_sliders__WEBPACK_IMPORTED_MODULE_1__["default"])('.feedback-slider-item', 'horizontal', '.main-prev-btn', '.main-next-btn');
   (0,_modules_sliders__WEBPACK_IMPORTED_MODULE_1__["default"])('.main-slider-item', 'vertical');
-  (0,_modules_forms__WEBPACK_IMPORTED_MODULE_2__["default"])();
+  (0,_modules_forms__WEBPACK_IMPORTED_MODULE_2__["default"])(modalState);
   (0,_modules_mask__WEBPACK_IMPORTED_MODULE_3__["default"])('[name="phone"]');
   (0,_modules_checkTextInputs__WEBPACK_IMPORTED_MODULE_4__["default"])('[name="name"]');
   (0,_modules_checkTextInputs__WEBPACK_IMPORTED_MODULE_4__["default"])('[name="message"]');
   (0,_modules_showMoreStyles__WEBPACK_IMPORTED_MODULE_5__["default"])('.button-styles', '#styles .row');
-  (0,_modules_calc__WEBPACK_IMPORTED_MODULE_6__["default"])('#size', '#material', '#options', '.promocode', '.calc-price');
   (0,_modules_filter__WEBPACK_IMPORTED_MODULE_7__["default"])();
 });
 })();

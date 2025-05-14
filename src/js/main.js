@@ -10,15 +10,18 @@ import filter from "./modules/filter";
 document.addEventListener('DOMContentLoaded', () => {
     "use strict";
 
+    let modalState = {};
+
+    calc('#size', '#material', '#options', '.promocode', '.calc-price', modalState);
     modals();
     sliders('.feedback-slider-item', 'horizontal', '.main-prev-btn', '.main-next-btn');
     sliders('.main-slider-item', 'vertical');
-    forms();
+    forms(modalState);
     mask('[name="phone"]');
     checkTextInputs('[name="name"]');
     checkTextInputs('[name="message"]');
     showMoreStyles('.button-styles', '#styles .row');
-    calc('#size', '#material', '#options', '.promocode', '.calc-price'); 
+
     filter();
 })
 
