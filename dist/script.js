@@ -2,6 +2,37 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./src/js/modules/accirduin.js":
+/*!*************************************!*\
+  !*** ./src/js/modules/accirduin.js ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+const accordion = (triggersSelector, itemsSelector) => {
+  const btns = document.querySelectorAll(triggersSelector);
+  const blocks = document.querySelectorAll(itemsSelector);
+  blocks.forEach(block => {
+    block.classList.add('animated', 'fadeInDown');
+  });
+  btns.forEach(btn => {
+    btn.addEventListener('click', function () {
+      if (!this.classList.contains('active')) {
+        btns.forEach(btn => {
+          btn.classList.remove('active', 'active-style');
+        });
+        this.classList.add('active', 'active-style');
+      }
+    });
+  });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (accordion);
+
+/***/ }),
+
 /***/ "./src/js/modules/calc.js":
 /*!********************************!*\
   !*** ./src/js/modules/calc.js ***!
@@ -74,12 +105,6 @@ const calc = (size, material, options, promocode, result, state) => {
       state[prop] = clientOrder;
     }
   };
-
-  //     sizeBlock.addEventListener('change', calcFunc);
-  //     materialBlock.addEventListener('change', calcFunc);
-  //     optionsBlock.addEventListener('change', calcFunc);
-  //     promocodeBlock.addEventListener('input', calcFunc);
-
   sizeBlock.addEventListener('change', () => calcFunc('order'));
   materialBlock.addEventListener('change', () => calcFunc('order'));
   optionsBlock.addEventListener('change', () => calcFunc('order'));
@@ -218,7 +243,7 @@ const forms = state => {
     fail: 'assets/img/fail.png'
   };
   const path = {
-    // designer: 'assets/server.php',
+    designer: 'assets/server.php',
     question: 'assets/question.php'
   };
   const clearInputs = () => {
@@ -256,19 +281,17 @@ const forms = state => {
       statusImg.classList.add('animated', 'fadeInUp');
       statusMessage.appendChild(statusImg);
       const formData = new FormData(item);
-
-      // let api;
-      // item.closest('.popup-design') || item.classList.contains('calc_form') ? api = path.designer : api = path.question;
-      // console.log(api);
-
       if (item.getAttribute('data-calc') === "end") {
         for (let key in state) {
           formData.append(key, state[key]);
         }
       }
+      let api;
+      item.closest('.popup-design') || item.classList.contains('calc_form') ? api = path.designer : api = path.question;
+      console.log(api);
       state = {};
-      (0,_services_requests__WEBPACK_IMPORTED_MODULE_0__.postData)('assets/question.php', formData).then(res => {
-        // console.log(res);
+      (0,_services_requests__WEBPACK_IMPORTED_MODULE_0__.postData)(api, formData).then(res => {
+        console.log(res);
         statusImg.setAttribute('src', message.ok);
         textMessage.textContent = message.success;
       }).catch(() => {
@@ -446,6 +469,45 @@ const modals = () => {
   // showModalByTime('.popup-consultation', 3000);
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (modals);
+
+/***/ }),
+
+/***/ "./src/js/modules/pictureSize.js":
+/*!***************************************!*\
+  !*** ./src/js/modules/pictureSize.js ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+const pictureSize = imgSelector => {
+  const blocks = document.querySelectorAll(imgSelector);
+  function showImg(block) {
+    const img = block.querySelector('img');
+    img.src = img.src.slice(0, -4) + '-1.png';
+    block.querySelectorAll('p:not(.sizes-hit)').forEach(p => {
+      p.style.display = 'none';
+    });
+  }
+  function hideImg(block) {
+    const img = block.querySelector('img');
+    img.src = img.src.slice(0, -6) + '.png';
+    block.querySelectorAll('p:not(.sizes-hit)').forEach(p => {
+      p.style.display = 'block';
+    });
+  }
+  blocks.forEach(block => {
+    block.addEventListener('mouseover', () => {
+      showImg(block);
+    });
+    block.addEventListener('mouseout', () => {
+      hideImg(block);
+    });
+  });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (pictureSize);
 
 /***/ }),
 
@@ -678,6 +740,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_showMoreStyles__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/showMoreStyles */ "./src/js/modules/showMoreStyles.js");
 /* harmony import */ var _modules_calc__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/calc */ "./src/js/modules/calc.js");
 /* harmony import */ var _modules_filter__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./modules/filter */ "./src/js/modules/filter.js");
+/* harmony import */ var _modules_pictureSize__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./modules/pictureSize */ "./src/js/modules/pictureSize.js");
+/* harmony import */ var _modules_accirduin__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./modules/accirduin */ "./src/js/modules/accirduin.js");
+
+
 
 
 
@@ -700,6 +766,8 @@ document.addEventListener('DOMContentLoaded', () => {
   (0,_modules_checkTextInputs__WEBPACK_IMPORTED_MODULE_4__["default"])('[name="message"]');
   (0,_modules_showMoreStyles__WEBPACK_IMPORTED_MODULE_5__["default"])('.button-styles', '#styles .row');
   (0,_modules_filter__WEBPACK_IMPORTED_MODULE_7__["default"])();
+  (0,_modules_pictureSize__WEBPACK_IMPORTED_MODULE_8__["default"])('.sizes-block');
+  (0,_modules_accirduin__WEBPACK_IMPORTED_MODULE_9__["default"])('.accordion-heading', '.accordion-block');
 });
 })();
 

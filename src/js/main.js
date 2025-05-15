@@ -6,6 +6,8 @@ import checkTextInputs from "./modules/checkTextInputs";
 import showMoreStyles from "./modules/showMoreStyles";
 import calc from "./modules/calc";
 import filter from "./modules/filter";
+import pictureSize from "./modules/pictureSize";
+import accordion from "./modules/accirduin";
 
 document.addEventListener('DOMContentLoaded', () => {
     "use strict";
@@ -21,7 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
     checkTextInputs('[name="name"]');
     checkTextInputs('[name="message"]');
     showMoreStyles('.button-styles', '#styles .row');
-
     filter();
+    pictureSize('.sizes-block');
+    accordion('.accordion-heading', '.accordion-block')
 })
 
