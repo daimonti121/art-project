@@ -542,6 +542,44 @@ const pictureSize = imgSelector => {
 
 /***/ }),
 
+/***/ "./src/js/modules/scrolling.js":
+/*!*************************************!*\
+  !*** ./src/js/modules/scrolling.js ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+const scrolling = upSelector => {
+  const upElem = document.querySelector(upSelector);
+  window.addEventListener('scroll', () => {
+    if (document.documentElement.scrollTop > 1650) {
+      upElem.classList.add('animated', 'fadeIn');
+      upElem.classList.remove('fadeOut');
+    } else {
+      upElem.classList.add('fadeOut');
+      upElem.classList.remove('fadeIn');
+    }
+  });
+  const element = document.documentElement;
+  const body = document.body;
+  const calcScroll = () => {
+    upElem.addEventListener('click', function () {
+      let scrollTop = Math.round(body.scrollTop || element.scrollTop);
+      if (this.hash !== '') {
+        event.preventDefault();
+        let hashElement = document.querySelector(this.hash),
+          hashElementTop = 0;
+      }
+    });
+  };
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (scrolling);
+
+/***/ }),
+
 /***/ "./src/js/modules/showMoreStyles.js":
 /*!******************************************!*\
   !*** ./src/js/modules/showMoreStyles.js ***!
@@ -774,6 +812,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_pictureSize__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./modules/pictureSize */ "./src/js/modules/pictureSize.js");
 /* harmony import */ var _modules_accirduin__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./modules/accirduin */ "./src/js/modules/accirduin.js");
 /* harmony import */ var _modules_burger__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./modules/burger */ "./src/js/modules/burger.js");
+/* harmony import */ var _modules_scrolling__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./modules/scrolling */ "./src/js/modules/scrolling.js");
+
 
 
 
@@ -802,6 +842,7 @@ document.addEventListener('DOMContentLoaded', () => {
   (0,_modules_pictureSize__WEBPACK_IMPORTED_MODULE_8__["default"])('.sizes-block');
   (0,_modules_accirduin__WEBPACK_IMPORTED_MODULE_9__["default"])('.accordion-heading', '.accordion-block');
   (0,_modules_burger__WEBPACK_IMPORTED_MODULE_10__["default"])('.burger-menu', '.burger');
+  (0,_modules_scrolling__WEBPACK_IMPORTED_MODULE_11__["default"])('.pageup');
 });
 })();
 
